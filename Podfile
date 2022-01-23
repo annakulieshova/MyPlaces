@@ -7,4 +7,5 @@ target 'MyPlaces' do
 
   # Pods for MyPlaces
 pod 'RealmSwift', '~>10'
+pod 'Cosmos', '~> 23.0'
 end

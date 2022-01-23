@@ -51,8 +51,6 @@ class RatingControl: UIStackView {
         // Calculate the rating of selected button
         let selectedRating = index + 1
         rating = selectedRating
-        
-        
     }
     
     // MARK: Private methods
