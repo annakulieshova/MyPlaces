@@ -27,7 +27,7 @@ class NewPlaceViewController: UITableViewController {
         setupEditScreen()
     }
     
-    // MARK: Table view delegate
+    // MARK: - Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -72,17 +72,24 @@ class NewPlaceViewController: UITableViewController {
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier != "showMap" { return }
         
-        let mapVC = segue.destination as! MapViewController
-        mapVC.place.name = placeName.text!
-        mapVC.place.location = placeLocation.text
-        mapVC.place.type = placeType.text
-        mapVC.place.imageData = placeImage.image?.pngData()
+        guard   let identifier = segue.identifier,
+                let mapVC = segue.destination as? MapViewController
+                else { return }
+        
+        mapVC.incomeSegueIdentifier = identifier
+        mapVC.mapViewControllerDelegate = self
+        
+        if identifier == "showPlace" {
+            mapVC.place.name = placeName.text!
+            mapVC.place.location = placeLocation.text
+            mapVC.place.type = placeType.text
+            mapVC.place.imageData = placeImage.image?.pngData()
+        }
         
     }
     
-    // MARK: Save place
+    // MARK: - Save place
     func savePlace() {
         
         let image = imageIsChanged ? placeImage.image : UIImage(named: "imagePlaceholder")
@@ -104,7 +111,7 @@ class NewPlaceViewController: UITableViewController {
         }
     }
     
-    // MARK: Edit place
+    // MARK: - Edit place
     private func setupEditScreen() {
         if currentPlace != nil {
             setupNavigationBar()
@@ -135,7 +142,7 @@ class NewPlaceViewController: UITableViewController {
     }
 }
 
-    // MARK: Text field delegate
+    // MARK: - Text field delegate
 extension NewPlaceViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -152,7 +159,7 @@ extension NewPlaceViewController: UITextFieldDelegate {
     }
 }
 
-    // MARK: Work with image
+    // MARK: - Work with image
 extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func chooseImagePicker(source: UIImagePickerController.SourceType) {
@@ -174,5 +181,11 @@ extension NewPlaceViewController: UIImagePickerControllerDelegate, UINavigationC
         
         dismiss(animated: true, completion: nil)
     }
+}
+
+extension NewPlaceViewController: MapViewControllerDelegate {
     
+    func getAddress(_ address: String?) {
+        placeLocation.text = address
+    }
 }
